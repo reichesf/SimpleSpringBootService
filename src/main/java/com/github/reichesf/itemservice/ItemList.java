@@ -139,5 +139,6 @@ public final class ItemList
         return sPadded;
 
     }
+
     private List<Item> itemList = null;
 }

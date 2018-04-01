@@ -12,7 +12,7 @@ public final class ItemService
 {
     public ItemService()
     {
-        itemDAO = new ItemDAO();
+        super();
     }
 
     public ItemList getItemList()
@@ -50,6 +50,15 @@ public final class ItemService
         itemDAO.updateItemBalance(sUpc, nBalance);
     }
 
-    private static ItemDAO itemDAO = null;
+    private static ItemDAO itemDAO = new ItemDAO();
+
+    {
+        Item item1 = new Item("00000000004011", "Bananas", 3);
+        Item item2 = new Item("00000000004065", "Red Onion", 1);
+
+        itemDAO.addItem(item1);
+        itemDAO.addItem(item2);
+    }
+
 }
 

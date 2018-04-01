@@ -7,48 +7,41 @@ public class ItemDAO
 {
     public ItemDAO()
     {
-        super();
+        this.itemList = new ItemList();
     }
     public ItemList getItemList()
     {
-        return itemList;
+        return this.itemList;
     }
 
     public Item getItem(final String sUpc)
     {
-        return itemList.getItem(sUpc);
+        return this.itemList.getItem(sUpc);
     }
 
     public void removeItem(final String sUpc)
     {
-        itemList.removeItem(sUpc);
+        this.itemList.removeItem(sUpc);
     }
 
     public void updateItem(final Item item)
     {
-        itemList.updateItem(item);
+        this.itemList.updateItem(item);
     }
     public void addItem(final Item item)
     {
-        itemList.addItem(item);
+        this.itemList.addItem(item);
     }
 
     public void updateItemDescription(final String sUpc, final String sDescription)
     {
-        itemList.updateItemDescription(sUpc, sDescription);
+        this.itemList.updateItemDescription(sUpc, sDescription);
     }
 
     public void updateItemBalance(final String sUpc, final long nBalance)
     {
-        itemList.updateItemBalance(sUpc, nBalance);
+        this.itemList.updateItemBalance(sUpc, nBalance);
     }
 
-    private static ItemList itemList = new ItemList();
-    {
-        Item item1 = new Item("00000000004011", "Bananas", 3);
-        Item item2 = new Item("00000000004065", "Red Onion", 1);
-
-        itemList.addItem(item1);
-        itemList.addItem(item2);
-    }
+    private ItemList itemList = null;
 }
