@@ -50,4 +50,12 @@ public final class Controller
     {
         return new ResponseEntity<>(itemService.getItemList(), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/item", method = RequestMethod.POST, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    public ResponseEntity<Item> addItem(@RequestBody Item item)
+    {
+        itemService.addItem(item);
+
+        return new ResponseEntity<>(item, HttpStatus.OK);
+    }
 }

@@ -11,7 +11,7 @@ usage()
 	echo "Usage: AddItem [-v] [-t mediaType] [-h host] [-p port]"
 	echo "               -u <upc>"
 	echo "               -d <description>]"
-	echo "               -q <quantity>j"
+	echo "               -b <balance>j"
 	echo ""
 }
 
@@ -22,7 +22,7 @@ PORT="8080"
 
 UPC=
 DESCRIPTION=
-QUANTITY=
+BALANCE=
 
 CORRELATION_ID=`uuidgen`
 SOURCE_APPLICATION="$0"
@@ -37,12 +37,12 @@ do
 		-t) shift ; MEDIA_TYPE="$1" ; shift ;;
 		-u) shift ; UPC="$1" ; shift ;;
 		-d) shift ; DESCRIPTION="$1" ; shift ;;
-		-q) shift ; QUANTITY="$1" ; shift ;;
+		-b) shift ; BALANCE="$1" ; shift ;;
 		*)  usage; exit 1;;
 	esac
 done
 
-if [ "${UPC}" = "" -o "${DESCRIPTION}" = "" -o "${QUANTITY}" = "" ]
+if [ "${UPC}" = "" -o "${DESCRIPTION}" = "" -o "${BALANCE}" = "" ]
 then
 	usage
 	exit 1
@@ -61,14 +61,14 @@ then
 	echo "," >> ${REQUEST_FILE}
 	echo -n "  \"description\": \"${DESCRIPTION}\"" >> ${REQUEST_FILE}
 	echo "," >> ${REQUEST_FILE}
-	echo -n "  \"quantity\": \"${QUANTITY}\"" >> ${REQUEST_FILE}
+	echo -n "  \"balance\": \"${BALANCE}\"" >> ${REQUEST_FILE}
 	echo "" >> ${REQUEST_FILE}
 	echo "}" >> ${REQUEST_FILE}
 else
 	echo "<Item>" > ${REQUEST_FILE}
 	echo "  <upc>${UPC}</upc>" >> ${REQUEST_FILE}
 	echo "  <description>${DESCRIPTION}</description>" >> ${REQUEST_FILE}
-	echo "  <quantity>${QUANTITY}</quantity>" >> ${REQUEST_FILE}
+	echo "  <balance>${BALANCE}</balance>" >> ${REQUEST_FILE}
 	echo "</Item>" >> ${REQUEST_FILE}
 fi
 
@@ -84,14 +84,11 @@ then
 	echo "----------------------------------------------------"
 fi
 
-#curl ${VERBOSE}  \
-#	-X PUT --data @${REQUEST_FILE} \
-#	--header content-type:${MEDIA_TYPE} \
-#	--header accept:${MEDIA_TYPE} \
-#	--header X-Correlation-Id:${CORRELATION_ID} \
-#	--header X-Source-Application:${SOURCE_APPLICATION} \
-#	--header X-Event-Name:${EVENT} \
-#	http://${HOST}:${PORT}/${RESOURCE}
+curl ${VERBOSE}  \
+	-X POST --data @${REQUEST_FILE} \
+	--header content-type:${MEDIA_TYPE} \
+	--header accept:${MEDIA_TYPE} \
+	http://${HOST}:${PORT}/${RESOURCE}
 
 rm -f ${REQUEST_FILE}
 
