@@ -46,7 +46,7 @@ public final class Controller
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity<List> getItemList()
+    public ResponseEntity<ItemList> getItemList()
     {
         return new ResponseEntity<>(itemService.getItemList(), HttpStatus.OK);
     }
