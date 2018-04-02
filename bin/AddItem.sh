@@ -65,11 +65,11 @@ then
 	echo "" >> ${REQUEST_FILE}
 	echo "}" >> ${REQUEST_FILE}
 else
-	echo "<Item>" > ${REQUEST_FILE}
+	echo "<ItemData>" > ${REQUEST_FILE}
 	echo "  <upc>${UPC}</upc>" >> ${REQUEST_FILE}
 	echo "  <description>${DESCRIPTION}</description>" >> ${REQUEST_FILE}
 	echo "  <balance>${BALANCE}</balance>" >> ${REQUEST_FILE}
-	echo "</Item>" >> ${REQUEST_FILE}
+	echo "</ItemData>" >> ${REQUEST_FILE}
 fi
 
 # Setup the Resource that will be accessed.

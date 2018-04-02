@@ -1,47 +1,44 @@
 package com.github.reichesf.itemservice;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ItemDAO
+public final class ItemDAO
 {
     public ItemDAO()
     {
-        this.itemList = new ItemList();
+        this.itemStorage = new ItemStorage();
     }
-    public ItemList getItemList()
+    public ItemStorage getItemList()
     {
-        return this.itemList;
+        return this.itemStorage;
     }
 
-    public Item getItem(final String sUpc)
+    public ItemData getItem(final String sUpc)
     {
-        return this.itemList.getItem(sUpc);
+        return this.itemStorage.getItem(sUpc);
     }
 
     public void removeItem(final String sUpc)
     {
-        this.itemList.removeItem(sUpc);
+        this.itemStorage.removeItem(sUpc);
     }
 
-    public void updateItem(final Item item)
+    public void updateItem(final ItemData itemData)
     {
-        this.itemList.updateItem(item);
+        this.itemStorage.updateItem(itemData);
     }
-    public void addItem(final Item item)
+    public void addItem(final ItemData itemData)
     {
-        this.itemList.addItem(item);
+        this.itemStorage.addItem(itemData);
     }
 
     public void updateItemDescription(final String sUpc, final String sDescription)
     {
-        this.itemList.updateItemDescription(sUpc, sDescription);
+        this.itemStorage.updateItemDescription(sUpc, sDescription);
     }
 
     public void updateItemBalance(final String sUpc, final long nBalance)
     {
-        this.itemList.updateItemBalance(sUpc, nBalance);
+        this.itemStorage.updateItemBalance(sUpc, nBalance);
     }
 
-    private ItemList itemList = null;
+    private ItemStorage itemStorage = null;
 }

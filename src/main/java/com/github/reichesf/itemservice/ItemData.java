@@ -22,20 +22,20 @@ import java.util.TimeZone;
 
 @XmlType(propOrder = {"upc", "description", "balance"})
 
-@XmlRootElement(name = "Item")
-public final class Item
+@XmlRootElement(name = "ItemData")
+public final class ItemData
 {
-    public Item()
+    public ItemData()
     {
-        this.dateTime = Item.getDateTimeAsString(System.currentTimeMillis());
+        this.dateTime = ItemData.getDateTimeAsString(System.currentTimeMillis());
     }
 
-    public Item(final String sUpc, final String sDescription, final long nBalance)
+    public ItemData(final String sUpc, final String sDescription, final long nBalance)
     {
         this.upc = sUpc;
         this.description = sDescription;
         this.balance = nBalance;
-        this.dateTime = Item.getDateTimeAsString(System.currentTimeMillis());
+        this.dateTime = ItemData.getDateTimeAsString(System.currentTimeMillis());
     }
 
     @XmlElement(name="upc")
@@ -84,7 +84,7 @@ public final class Item
 
     public void setDateTimeValue(final long nMillis)
     {
-        this.dateTime = Item.getDateTimeAsString(nMillis);
+        this.dateTime = ItemData.getDateTimeAsString(nMillis);
     }
 
     private static String getDateTimeAsString(final long nMillis)

@@ -2,11 +2,6 @@ package com.github.reichesf.itemservice;
 
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public final class ItemService
 {
@@ -15,12 +10,12 @@ public final class ItemService
         super();
     }
 
-    public ItemList getItemList()
+    public ItemStorage getItemList()
     {
         return itemDAO.getItemList();
     }
 
-    public Item getItem(final String sUpc)
+    public ItemData getItem(final String sUpc)
     {
         return itemDAO.getItem(sUpc);
     }
@@ -30,14 +25,14 @@ public final class ItemService
        itemDAO.removeItem(sUpc);
     }
 
-    public void updateItem(final Item item)
+    public void updateItem(final ItemData itemData)
     {
-       itemDAO.updateItem(item);
+       itemDAO.updateItem(itemData);
     }
 
-    public void addItem(final Item item)
+    public void addItem(final ItemData itemData)
     {
-        itemDAO.addItem(item);
+        itemDAO.addItem(itemData);
     }
 
     public void updateItemDescription(final String sUpc, final String sDescription)
@@ -53,11 +48,11 @@ public final class ItemService
     private static ItemDAO itemDAO = new ItemDAO();
 
     {
-        Item item1 = new Item("00000000004011", "Bananas", 3);
-        Item item2 = new Item("00000000004065", "Red Onion", 1);
+        ItemData itemData1 = new ItemData("00000000004011", "Bananas", 3);
+        ItemData itemData2 = new ItemData("00000000004065", "Red Onion", 1);
 
-        itemDAO.addItem(item1);
-        itemDAO.addItem(item2);
+        itemDAO.addItem(itemData1);
+        itemDAO.addItem(itemData2);
     }
 
 }

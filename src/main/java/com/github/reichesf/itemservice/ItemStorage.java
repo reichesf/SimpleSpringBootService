@@ -6,34 +6,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "ItemList")
-public final class ItemList
+public final class ItemStorage
 {
-    public ItemList()
+    public ItemStorage()
     {
-        this.itemList = new ArrayList<>();
+        this.itemDataList = new ArrayList<>();
     }
 
-    @XmlElement(name = "Item")
-    public List<Item> getItemList()
+    @XmlElement(name = "ItemData")
+    public List<ItemData> getItemDataList()
     {
-        return itemList;
+        return itemDataList;
     }
 
-    public Item getItem(final String sUpc)
+    public ItemData getItem(final String sUpc)
     {
-        Item retItem = null;
+        ItemData retItemData = null;
 
         if (sUpc != null)
         {
-            for (Item item : itemList)
+            for (ItemData itemData : itemDataList)
             {
-                if (item.getUpc().equalsIgnoreCase(this.padItem(sUpc)))
+                if (itemData.getUpc().equalsIgnoreCase(this.padItem(sUpc)))
                 {
-                    retItem = item;
+                    retItemData = itemData;
                 }
             }
         }
-        return retItem;
+        return retItemData;
     }
 
     public void removeItem(final String sUpc)
@@ -42,29 +42,29 @@ public final class ItemList
 
         if (ndx >= 0)
         {
-            itemList.remove(ndx);
+            itemDataList.remove(ndx);
         }
     }
 
-    public void updateItem(final Item item)
+    public void updateItem(final ItemData itemData)
     {
-        int ndx = this.getItemIndex(item);
+        int ndx = this.getItemIndex(itemData);
 
         if (ndx >= 0)
         {
-            itemList.get(ndx).setDescription(item.getDescription());
-            itemList.get(ndx).setBalance(item.getBalance());
+            itemDataList.get(ndx).setDescription(itemData.getDescription());
+            itemDataList.get(ndx).setBalance(itemData.getBalance());
         }
     }
 
-    public void addItem(final Item item)
+    public void addItem(final ItemData itemData)
     {
-        int ndx = this.getItemIndex(item);
+        int ndx = this.getItemIndex(itemData);
 
         if (ndx < 0)
         {
-            item.setUpc(padItem(item.getUpc()));
-            itemList.add(item);
+            itemData.setUpc(padItem(itemData.getUpc()));
+            itemDataList.add(itemData);
         }
     }
 
@@ -74,7 +74,7 @@ public final class ItemList
 
         if (ndx >= 0)
         {
-            itemList.get(ndx).setDescription(sDescription);
+            itemDataList.get(ndx).setDescription(sDescription);
         }
     }
 
@@ -84,17 +84,17 @@ public final class ItemList
 
         if (ndx >= 0)
         {
-            itemList.get(ndx).setBalance(nBalance);
+            itemDataList.get(ndx).setBalance(nBalance);
         }
     }
 
-    private int getItemIndex(final Item item)
+    private int getItemIndex(final ItemData itemData)
     {
         int nRet = -1;
 
-        if (item != null)
+        if (itemData != null)
         {
-            nRet = this.getItemIndex(item.getUpc());
+            nRet = this.getItemIndex(itemData.getUpc());
         }
         return nRet;
     }
@@ -108,9 +108,9 @@ public final class ItemList
         {
             sItemUpc = this.padItem(sUpc);
 
-            for (int i = 0; i < itemList.size() && nRet < 0; ++i)
+            for (int i = 0; i < itemDataList.size() && nRet < 0; ++i)
             {
-                if (sItemUpc.equalsIgnoreCase(itemList.get(i).getUpc()))
+                if (sItemUpc.equalsIgnoreCase(itemDataList.get(i).getUpc()))
                 {
                     nRet = i;
                 }
@@ -140,5 +140,5 @@ public final class ItemList
 
     }
 
-    private List<Item> itemList = null;
+    private List<ItemData> itemDataList = null;
 }

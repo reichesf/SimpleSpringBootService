@@ -1,6 +1,6 @@
 #!/bin/sh
 #---------------------------------------------------------------------
-# item.sh
+# itemData.sh
 #
 # Shell script used to interact with the service.
 #---------------------------------------------------------------------
@@ -8,11 +8,11 @@
 usage()
 {
 	echo ""
-	echo "Usage: item.sh [-v] [-t mediaType] [-h host] [-p port]"
+	echo "Usage: itemData.sh [-v] [-t mediaType] [-h host] [-p port]"
 	echo "               [-l]"
 	echo ""
 	echo "           -l = List all items."
-	echo "           -g = Get item specified by the UPC."
+	echo "           -g = Get itemData specified by the UPC."
 	echo "           -u = The UPC."
 	echo ""
 }
