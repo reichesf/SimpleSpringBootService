@@ -2,6 +2,8 @@ package com.github.reichesf.itemservice;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public final class ItemService
 {
@@ -10,7 +12,7 @@ public final class ItemService
         super();
     }
 
-    public ItemStorage getItemList()
+    public Set<String> getUpcList()
     {
         return itemDAO.getItemList();
     }
@@ -20,19 +22,19 @@ public final class ItemService
         return itemDAO.getItem(sUpc);
     }
 
-    public void removeItem(final String sUpc)
+    public boolean removeItem(final String sUpc)
     {
-       itemDAO.removeItem(sUpc);
+       return itemDAO.removeItem(sUpc);
     }
 
-    public void updateItem(final ItemData itemData)
+    public boolean updateItem(final ItemData itemData)
     {
-       itemDAO.updateItem(itemData);
+       return itemDAO.updateItem(itemData);
     }
 
-    public void addItem(final ItemData itemData)
+    public boolean addItem(final ItemData itemData)
     {
-        itemDAO.addItem(itemData);
+        return itemDAO.addItem(itemData);
     }
 
     public void updateItemDescription(final String sUpc, final String sDescription)

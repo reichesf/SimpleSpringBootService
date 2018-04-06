@@ -28,31 +28,146 @@ public final class Controller
     // - Use of the ResponseEntity when producing a response.
 
     @RequestMapping(value = "/item/{upc}", method = RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity<ItemData> getItem(@PathVariable String upc)
+    public ResponseEntity getItem(@PathVariable String upc)
     {
-        ItemData itemData = itemService.getItem(upc);
+        ResponseEntity responseEntity = null;
+        ItemData itemData = null;
 
-        if (itemData != null)
+        try
         {
-            return new ResponseEntity<>(itemData, HttpStatus.OK);
+            itemData = itemService.getItem(upc);
+
+            if (itemData != null)
+            {
+                responseEntity = new ResponseEntity(new Item(itemData), HttpStatus.OK);
+            }
+            else
+            {
+                responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
+            }
         }
-        else
+        finally
         {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            itemData = null;
         }
+        return responseEntity;
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity<ItemStorage> getItemList()
+    public ResponseEntity getItemList()
     {
-        return new ResponseEntity<>(itemService.getItemList(), HttpStatus.OK);
+        ResponseEntity responseEntity = null;
+        ItemList itemList = null;
+        ItemData itemData = null;
+
+        try
+        {
+            itemList = new ItemList();
+
+            for (String sUpc : itemService.getUpcList())
+            {
+                itemData = itemService.getItem(sUpc);
+
+                if (itemData != null)
+                {
+                    itemList.add(new Item(itemData));
+                }
+            }
+            if (itemList.isEmpty())
+            {
+                responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
+            }
+            else
+            {
+                responseEntity = new ResponseEntity(itemList, HttpStatus.OK);
+            }
+        }
+        finally
+        {
+            itemData = null;
+        }
+        return responseEntity;
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.POST, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity<ItemData> addItem(@RequestBody ItemData itemData)
+    public ResponseEntity<Item> addItem(@RequestBody Item item)
     {
-        itemService.addItem(itemData);
+        ResponseEntity responseEntity = null;
+        Item retItem = null;
+        ItemData itemData = null;
 
-        return new ResponseEntity<>(itemData, HttpStatus.OK);
+        try
+        {
+            if (item == null)
+            {
+                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            else
+            {
+                itemData = new ItemData();
+
+                itemData.setUpc(item.getUpc());
+                itemData.setDescription(item.getDescription());
+                itemData.setBalance(item.getBalance());
+
+                if (itemService.addItem(itemData) == true)
+                {
+                    retItem = new Item(itemService.getItem(itemData.getUpc()));
+
+                    responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                }
+                else
+                {
+                    responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        finally
+        {
+            itemData = null;
+            retItem = null;
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/item", method = RequestMethod.PUT, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    public ResponseEntity<Item> updateItem(@RequestBody Item item)
+    {
+        ResponseEntity responseEntity = null;
+        Item retItem = null;
+        ItemData itemData = null;
+
+        try
+        {
+            if (item == null)
+            {
+                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            else
+            {
+                itemData = new ItemData();
+
+                itemData.setUpc(item.getUpc());
+                itemData.setDescription(item.getDescription());
+                itemData.setBalance(item.getBalance());
+
+                if (itemService.updateItem(itemData) == true)
+                {
+                    retItem = new Item(itemService.getItem(itemData.getUpc()));
+
+                    responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                }
+                else
+                {
+                    responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        finally
+        {
+            itemData = null;
+            retItem = null;
+        }
+        return responseEntity;
     }
 }
