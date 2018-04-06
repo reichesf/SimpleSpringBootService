@@ -90,7 +90,7 @@ public final class Controller
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.POST, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity<Item> addItem(@RequestBody Item item)
+    public ResponseEntity addItem(@RequestBody Item item)
     {
         ResponseEntity responseEntity = null;
         Item retItem = null;
@@ -131,7 +131,7 @@ public final class Controller
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.PUT, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity<Item> updateItem(@RequestBody Item item)
+    public ResponseEntity updateItem(@RequestBody Item item)
     {
         ResponseEntity responseEntity = null;
         Item retItem = null;
