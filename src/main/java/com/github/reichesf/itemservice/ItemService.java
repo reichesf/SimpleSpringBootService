@@ -56,6 +56,5 @@ public final class ItemService
         itemDAO.addItem(itemData1);
         itemDAO.addItem(itemData2);
     }
-
 }
 

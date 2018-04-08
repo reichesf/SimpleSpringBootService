@@ -110,6 +110,7 @@ then
 elif [ "${LISTITEMS}" = "TRUE" ]
 then
 	METHOD="GET"
+	RESOURCE="${RESOURCE}/"
 else
 	usage
 	exit 1

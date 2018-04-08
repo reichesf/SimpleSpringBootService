@@ -32,23 +32,35 @@ public final class Controller
     {
         ResponseEntity responseEntity = null;
         ItemData itemData = null;
+        ItemList itemList = null;
 
         try
         {
-            itemData = itemService.getItem(upc);
-
-            if (itemData != null)
+            if (upc == null)
             {
-                responseEntity = new ResponseEntity(new Item(itemData), HttpStatus.OK);
+                responseEntity = new ResponseEntity(itemList, HttpStatus.BAD_REQUEST);
             }
             else
             {
-                responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
+                itemData = itemService.getItem(upc);
+
+                if (itemData != null)
+                {
+                    itemList = new ItemList();
+                    itemList.add(new Item(itemData));
+
+                    responseEntity = new ResponseEntity(itemList, HttpStatus.OK);
+                }
+                else
+                {
+                    responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
+                }
             }
         }
         finally
         {
             itemData = null;
+            itemList = null;
         }
         return responseEntity;
     }
