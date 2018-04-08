@@ -102,36 +102,50 @@ public final class Controller
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.POST, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity addItem(@RequestBody Item item)
+    public ResponseEntity addItem(@RequestBody ItemList itemList)
     {
         ResponseEntity responseEntity = null;
+        ItemList retItemList = null;
         Item retItem = null;
+        Item item = null;
         ItemData itemData = null;
 
         try
         {
-            if (item == null)
+            if (itemList == null)
+            {
+                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            else if (itemList.isEmpty())
             {
                 responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
             else
             {
-                itemData = new ItemData();
+                retItemList = new ItemList();
 
-                itemData.setUpc(item.getUpc());
-                itemData.setDescription(item.getDescription());
-                itemData.setBalance(item.getBalance());
-
-                if (itemService.addItem(itemData) == true)
+                for (Item i : itemList.getItemList())
                 {
-                    retItem = new Item(itemService.getItem(itemData.getUpc()));
+                    itemData = new ItemData(i.getUpc(), i.getDescription(), i.getBalance());
 
-                    responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                    itemService.addItem(itemData);
+
+                    retItemList.add(new Item(itemService.getItem(itemData.getUpc())));
+
+/*
+                    if (itemService.addItem(itemData) == true)
+                    {
+                        retItem = new Item(itemService.getItem(itemData.getUpc()));
+
+                        responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                    }
+                    else
+                    {
+                        responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    }
+*/
                 }
-                else
-                {
-                    responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
-                }
+                responseEntity = new ResponseEntity(retItemList, HttpStatus.OK);
             }
         }
         finally

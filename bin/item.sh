@@ -89,19 +89,22 @@ then
 	if [ "${MEDIA_TYPE}" = "application/json" ]
 	then
 		echo "{" > ${REQUEST_FILE}
-		echo -n "  \"upc\": \"${UPC}\"" >> ${REQUEST_FILE}
-		echo "," >> ${REQUEST_FILE}
-		echo -n "  \"description\": \"${DESCRIPTION}\"" >> ${REQUEST_FILE}
-		echo "," >> ${REQUEST_FILE}
-		echo -n "  \"balance\": \"${BALANCE}\"" >> ${REQUEST_FILE}
-		echo "" >> ${REQUEST_FILE}
+		echo "  \"itemList\": [" >> ${REQUEST_FILE}
+		echo "    {" >> ${REQUEST_FILE}
+		echo "      \"upc\": \"${UPC}\"," >> ${REQUEST_FILE}
+		echo "      \"description\": \"${DESCRIPTION}\"," >> ${REQUEST_FILE}
+		echo "      \"balance\": \"${BALANCE}\"" >> ${REQUEST_FILE}
+		echo "    }" >> ${REQUEST_FILE}
+		echo "  ]" >> ${REQUEST_FILE}
 		echo "}" >> ${REQUEST_FILE}
 	else
-		echo "<Item>" > ${REQUEST_FILE}
-		echo "  <upc>${UPC}</upc>" >> ${REQUEST_FILE}
-		echo "  <description>${DESCRIPTION}</description>" >> ${REQUEST_FILE}
-		echo "  <balance>${BALANCE}</balance>" >> ${REQUEST_FILE}
-		echo "</Item>" >> ${REQUEST_FILE}
+		echo "<ItemList>" > ${REQUEST_FILE}
+		echo "  <Item>" >> ${REQUEST_FILE}
+		echo "    <upc>${UPC}</upc>" >> ${REQUEST_FILE}
+		echo "    <description>${DESCRIPTION}</description>" >> ${REQUEST_FILE}
+		echo "    <balance>${BALANCE}</balance>" >> ${REQUEST_FILE}
+		echo "  </Item>" >> ${REQUEST_FILE}
+		echo "</ItemList>" >> ${REQUEST_FILE}
 	fi
 	DATA="--data @${REQUEST_FILE}"
 	CONTENT_TYPE="--header content-type:${MEDIA_TYPE}"
