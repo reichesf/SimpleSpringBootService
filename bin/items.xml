@@ -1,0 +1,13 @@
+<ItemList>
+  <Item>
+    <upc>4100</upc>
+    <description>Twinkies</description>
+    <balance>4</balance>
+  </Item>
+  <Item>
+    <upc>4101</upc>
+    <description>Free Range Chicken</description>
+    <balance>3</balance>
+  </Item>
+</ItemList>
+

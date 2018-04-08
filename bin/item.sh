@@ -9,13 +9,14 @@ usage()
 {
 	echo ""
 	echo "Usage:  item.sh [-v] [-t mediaType] [-h host] [-p port]"
-	echo "                [-l | -g | -A | -U]"
+	echo "                [-l | -g | -A | -U] [-f file]"
 	echo "                [-u upc] [-d description] [-b balance]"
 	echo ""
 	echo "     -l = List all items."
 	echo "     -g = Get item specified by the UPC."
 	echo "     -A = Add the item; upc, description, balance are required."
 	echo "     -U = Update the item; upc, description, balance are required."
+	echo "     -f = File containing the items to add/update."
 	echo "     -u = The UPC."
 	echo "     -d = Description."
 	echo "     -b = Balance."
@@ -36,6 +37,7 @@ UPDATEITEM="FALSE"
 UPC=
 DESCRIPTION=
 BALANCE=
+FILE=
 
 while [ "$#" -gt 0 ]
 do
@@ -48,6 +50,7 @@ do
 		-g) GETITEM="TRUE" ; shift;;
 		-A) ADDITEM="TRUE" ; shift;;
 		-U) UPDATEITEM="TRUE" ; shift;;
+		-f) shift ; FILE=$1 ; shift;;
 		-u) shift ; UPC="$1" ; shift;;
 		-d) shift ; DESCRIPTION="$1" ; shift;;
 		-b) shift ; BALANCE="$1" ; shift;;
@@ -75,10 +78,13 @@ then
 
 elif [ "${ADDITEM}" = "TRUE" -o "${UPDATEITEM}" = "TRUE" ]
 then
-	if [ "${UPC}" = "" -o "${DESCRIPTION}" = "" -o "${BALANCE}" = ""  ]
+	if [ "${FILE}" = "" ]
 	then
-		usage
-		exit 1
+		if [ "${UPC}" = "" -o "${DESCRIPTION}" = "" -o "${BALANCE}" = ""  ]
+		then
+			usage
+			exit 1
+		fi
 	fi
 	if [ "${ADDITEM}" = "TRUE" ]
 	then
@@ -86,29 +92,33 @@ then
 	else
 		METHOD="PUT"
 	fi
-	if [ "${MEDIA_TYPE}" = "application/json" ]
+	if [ "${FILE}" = "" ]
 	then
-		echo "{" > ${REQUEST_FILE}
-		echo "  \"itemList\": [" >> ${REQUEST_FILE}
-		echo "    {" >> ${REQUEST_FILE}
-		echo "      \"upc\": \"${UPC}\"," >> ${REQUEST_FILE}
-		echo "      \"description\": \"${DESCRIPTION}\"," >> ${REQUEST_FILE}
-		echo "      \"balance\": \"${BALANCE}\"" >> ${REQUEST_FILE}
-		echo "    }" >> ${REQUEST_FILE}
-		echo "  ]" >> ${REQUEST_FILE}
-		echo "}" >> ${REQUEST_FILE}
+		if [ "${MEDIA_TYPE}" = "application/json" ]
+		then
+			echo "{" > ${REQUEST_FILE}
+			echo "  \"itemList\": [" >> ${REQUEST_FILE}
+			echo "    {" >> ${REQUEST_FILE}
+			echo "      \"upc\": \"${UPC}\"," >> ${REQUEST_FILE}
+			echo "      \"description\": \"${DESCRIPTION}\"," >> ${REQUEST_FILE}
+			echo "      \"balance\": \"${BALANCE}\"" >> ${REQUEST_FILE}
+			echo "    }" >> ${REQUEST_FILE}
+			echo "  ]" >> ${REQUEST_FILE}
+			echo "}" >> ${REQUEST_FILE}
+		else
+			echo "<ItemList>" > ${REQUEST_FILE}
+			echo "  <Item>" >> ${REQUEST_FILE}
+			echo "    <upc>${UPC}</upc>" >> ${REQUEST_FILE}
+			echo "    <description>${DESCRIPTION}</description>" >> ${REQUEST_FILE}
+			echo "    <balance>${BALANCE}</balance>" >> ${REQUEST_FILE}
+			echo "  </Item>" >> ${REQUEST_FILE}
+			echo "</ItemList>" >> ${REQUEST_FILE}
+		fi
+		DATA="--data @${REQUEST_FILE}"
 	else
-		echo "<ItemList>" > ${REQUEST_FILE}
-		echo "  <Item>" >> ${REQUEST_FILE}
-		echo "    <upc>${UPC}</upc>" >> ${REQUEST_FILE}
-		echo "    <description>${DESCRIPTION}</description>" >> ${REQUEST_FILE}
-		echo "    <balance>${BALANCE}</balance>" >> ${REQUEST_FILE}
-		echo "  </Item>" >> ${REQUEST_FILE}
-		echo "</ItemList>" >> ${REQUEST_FILE}
+		DATA="--data @${FILE}"
 	fi
-	DATA="--data @${REQUEST_FILE}"
 	CONTENT_TYPE="--header content-type:${MEDIA_TYPE}"
-
 
 elif [ "${LISTITEMS}" = "TRUE" ]
 then

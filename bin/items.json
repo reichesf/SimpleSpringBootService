@@ -1,0 +1,15 @@
+{
+  "itemList": [
+    {
+      "upc": "9998",
+      "description": "Pringles",
+      "balance": "1"
+    },
+    {
+      "upc": "9997",
+      "description": "Wonder Bread",
+      "balance": "1"
+    }
+  ]
+}
+

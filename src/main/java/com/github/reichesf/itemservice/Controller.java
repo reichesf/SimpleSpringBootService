@@ -106,8 +106,6 @@ public final class Controller
     {
         ResponseEntity responseEntity = null;
         ItemList retItemList = null;
-        Item retItem = null;
-        Item item = null;
         ItemData itemData = null;
 
         try
@@ -124,9 +122,9 @@ public final class Controller
             {
                 retItemList = new ItemList();
 
-                for (Item i : itemList.getItemList())
+                for (Item item : itemList.getItemList())
                 {
-                    itemData = new ItemData(i.getUpc(), i.getDescription(), i.getBalance());
+                    itemData = new ItemData(item.getUpc(), item.getDescription(), item.getBalance());
 
                     itemService.addItem(itemData);
 
@@ -151,48 +149,60 @@ public final class Controller
         finally
         {
             itemData = null;
-            retItem = null;
+            retItemList = null;
         }
         return responseEntity;
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.PUT, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity updateItem(@RequestBody Item item)
+    public ResponseEntity updateItem(@RequestBody ItemList itemList)
     {
         ResponseEntity responseEntity = null;
-        Item retItem = null;
+        ItemList retItemList = null;
         ItemData itemData = null;
 
         try
         {
-            if (item == null)
+            if (itemList == null)
+            {
+                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            else if (itemList.isEmpty())
             {
                 responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
             else
             {
-                itemData = new ItemData();
+                retItemList = new ItemList();
 
-                itemData.setUpc(item.getUpc());
-                itemData.setDescription(item.getDescription());
-                itemData.setBalance(item.getBalance());
-
-                if (itemService.updateItem(itemData) == true)
+                for (Item item : itemList.getItemList())
                 {
-                    retItem = new Item(itemService.getItem(itemData.getUpc()));
+                    itemData = new ItemData(item.getUpc(), item.getDescription(), item.getBalance());
 
-                    responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                    itemService.updateItem(itemData);
+
+                    retItemList.add(new Item(itemService.getItem(itemData.getUpc())));
+
+/*
+                    if (itemService.updateItem(itemData) == true)
+                    {
+                        retItem = new Item(itemService.getItem(itemData.getUpc()));
+
+                        responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                    }
+                    else
+                    {
+                        responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    }
+*/
                 }
-                else
-                {
-                    responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
-                }
+                responseEntity = new ResponseEntity(retItemList, HttpStatus.OK);
             }
         }
         finally
         {
             itemData = null;
-            retItem = null;
+            retItemList = null;
         }
         return responseEntity;
     }
