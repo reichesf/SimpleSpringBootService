@@ -19,7 +19,7 @@ public final class Controller
     @RequestMapping("/")
     public String index()
     {
-        return "Greetings from ItemData Controller!";
+        return "Greetings from Item Controller!";
     }
 
     // Illustrates the following:
@@ -27,7 +27,8 @@ public final class Controller
     // - Multiple "produces" on the RequestMapping to handle both JSON and XML.
     // - Use of the ResponseEntity when producing a response.
 
-    @RequestMapping(value = "/item/{upc}", method = RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(value = "/item/{upc}", method = RequestMethod.GET,
+            produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity getItem(@PathVariable String upc)
     {
         ResponseEntity responseEntity = null;
@@ -65,7 +66,8 @@ public final class Controller
         return responseEntity;
     }
 
-    @RequestMapping(value = "/item", method = RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(value = "/item", method = RequestMethod.GET,
+            produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity getItemList()
     {
         ResponseEntity responseEntity = null;
@@ -101,11 +103,13 @@ public final class Controller
         return responseEntity;
     }
 
-    @RequestMapping(value = "/item", method = RequestMethod.POST, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(value = "/item", method = RequestMethod.POST,
+            produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity addItem(@RequestBody ItemList itemList)
     {
         ResponseEntity responseEntity = null;
-        ItemList retItemList = null;
+        ItemListResponse retItemListResponse = null;
+        ItemResponse itemResponse = null;
         ItemData itemData = null;
 
         try
@@ -120,45 +124,53 @@ public final class Controller
             }
             else
             {
-                retItemList = new ItemList();
+                retItemListResponse = new ItemListResponse();
 
                 for (Item item : itemList.getItemList())
                 {
                     itemData = new ItemData(item.getUpc(), item.getDescription(), item.getBalance());
 
-                    itemService.addItem(itemData);
+                    itemResponse = new ItemResponse();
 
-                    retItemList.add(new Item(itemService.getItem(itemData.getUpc())));
-
-/*
                     if (itemService.addItem(itemData) == true)
                     {
-                        retItem = new Item(itemService.getItem(itemData.getUpc()));
+                        itemData = itemService.getItem(itemData.getUpc());
 
-                        responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                        itemResponse.setUpc(itemData.getUpc());
+                        itemResponse.setDescription(itemData.getDescription());
+                        itemResponse.setBalance(itemData.getBalance());
+                        itemResponse.setStatusCode(HttpStatus.OK.value());
+                        itemResponse.setStatus(HttpStatus.OK.getReasonPhrase());
                     }
                     else
                     {
-                        responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                        itemResponse.setUpc(item.getUpc());
+                        itemResponse.setDescription(item.getDescription());
+                        itemResponse.setBalance(item.getBalance());
+                        itemResponse.setStatusCode(HttpStatus.FORBIDDEN.value());
+                        itemResponse.setStatus(HttpStatus.FORBIDDEN.getReasonPhrase());
                     }
-*/
+                    retItemListResponse.add(itemResponse);
                 }
-                responseEntity = new ResponseEntity(retItemList, HttpStatus.OK);
+                responseEntity = new ResponseEntity(retItemListResponse, HttpStatus.OK);
             }
         }
         finally
         {
             itemData = null;
-            retItemList = null;
+            itemResponse = null;
+            retItemListResponse = null;
         }
         return responseEntity;
     }
 
-    @RequestMapping(value = "/item", method = RequestMethod.PUT, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(value = "/item", method = RequestMethod.PUT,
+            produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity updateItem(@RequestBody ItemList itemList)
     {
         ResponseEntity responseEntity = null;
-        ItemList retItemList = null;
+        ItemListResponse retItemListResponse = null;
+        ItemResponse itemResponse = null;
         ItemData itemData = null;
 
         try
@@ -173,36 +185,42 @@ public final class Controller
             }
             else
             {
-                retItemList = new ItemList();
+                retItemListResponse = new ItemListResponse();
 
                 for (Item item : itemList.getItemList())
                 {
+                    itemResponse = new ItemResponse();
+
                     itemData = new ItemData(item.getUpc(), item.getDescription(), item.getBalance());
 
-                    itemService.updateItem(itemData);
-
-                    retItemList.add(new Item(itemService.getItem(itemData.getUpc())));
-
-/*
                     if (itemService.updateItem(itemData) == true)
                     {
-                        retItem = new Item(itemService.getItem(itemData.getUpc()));
+                        itemData = itemService.getItem(itemData.getUpc());
 
-                        responseEntity = new ResponseEntity(retItem, HttpStatus.OK);
+                        itemResponse.setUpc(itemData.getUpc());
+                        itemResponse.setDescription(itemData.getDescription());
+                        itemResponse.setBalance(itemData.getBalance());
+                        itemResponse.setStatusCode(HttpStatus.OK.value());
+                        itemResponse.setStatus(HttpStatus.OK.getReasonPhrase());
                     }
                     else
                     {
-                        responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                        itemResponse.setUpc(item.getUpc());
+                        itemResponse.setDescription(item.getDescription());
+                        itemResponse.setBalance(item.getBalance());
+                        itemResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                        itemResponse.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
                     }
-*/
+                    retItemListResponse.add(itemResponse);
                 }
-                responseEntity = new ResponseEntity(retItemList, HttpStatus.OK);
+                responseEntity = new ResponseEntity(retItemListResponse, HttpStatus.OK);
             }
         }
         finally
         {
             itemData = null;
-            retItemList = null;
+            itemResponse = null;
+            retItemListResponse = null;
         }
         return responseEntity;
     }

@@ -5,33 +5,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-// Identify the class for JAXB (rendering as XML) requires
-// at a minimum the @XmlRootElement annotation. The name
-// attribute is optional as the name of the class (lower case)
-// is the default. Additional XML annotations
-// may be supplied at the method and class level.
-//
-// For JAXB (XML) the default (no-arg) constructor is
-// required.
-//
-// @XmlType with propOrder of 1 element is trivial but is
-// included to show it's use.
-
-@XmlType(propOrder = {"upc", "description", "balance"})
+@XmlType(propOrder = {"upc", "description", "balance", "statusCode", "status"})
 
 @XmlRootElement(name = "ItemResponse")
-public final class Item
+public final class ItemResponse
 {
-    public Item()
+    public ItemResponse()
     {
-    }
-
-    public Item(final ItemData itemData)
-    {
-        this.upc = itemData.getUpc();
-        this.description = itemData.getDescription();
-        this.balance = itemData.getBalance();
-        this.dateTime = itemData.getDateTime();
     }
 
     @XmlElement(name="upc")
@@ -77,8 +57,33 @@ public final class Item
     {
         this.dateTime = dateTime;
     }
+
+    @XmlElement(name="statusCode")
+    public int getStatusCode()
+    {
+        return this.statusCode;
+    }
+
+    public void setStatusCode(final int nStatusCode)
+    {
+        this.statusCode = nStatusCode;
+    }
+
+    @XmlElement(name="status")
+    public String getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(final String sStatus)
+    {
+        this.status = sStatus;
+    }
+
     private String dateTime = null;
     private String upc = null;
     private String description = null;
+    private int statusCode = 0;
+    private String status = null;
     private long balance = 0;
 }
