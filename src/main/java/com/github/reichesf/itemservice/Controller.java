@@ -29,9 +29,9 @@ public final class Controller
 
     @RequestMapping(value = "/item/{upc}", method = RequestMethod.GET,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity getItem(@PathVariable String upc)
+    public ResponseEntity<ItemList> getItem(@PathVariable String upc)
     {
-        ResponseEntity responseEntity = null;
+        ResponseEntity<ItemList> responseEntity = null;
         ItemData itemData = null;
         ItemList itemList = null;
 
@@ -39,7 +39,7 @@ public final class Controller
         {
             if (upc == null)
             {
-                responseEntity = new ResponseEntity(itemList, HttpStatus.BAD_REQUEST);
+                responseEntity = new ResponseEntity<>(itemList, HttpStatus.BAD_REQUEST);
             }
             else
             {
@@ -50,11 +50,11 @@ public final class Controller
                     itemList = new ItemList();
                     itemList.add(new Item(itemData));
 
-                    responseEntity = new ResponseEntity(itemList, HttpStatus.OK);
+                    responseEntity = new ResponseEntity<>(itemList, HttpStatus.OK);
                 }
                 else
                 {
-                    responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
+                    responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }
             }
         }
@@ -68,9 +68,9 @@ public final class Controller
 
     @RequestMapping(value = "/item", method = RequestMethod.GET,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity getItemList()
+    public ResponseEntity<ItemList> getItemList()
     {
-        ResponseEntity responseEntity = null;
+        ResponseEntity<ItemList> responseEntity = null;
         ItemList itemList = null;
         ItemData itemData = null;
 
@@ -89,11 +89,11 @@ public final class Controller
             }
             if (itemList.isEmpty())
             {
-                responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
+                responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             else
             {
-                responseEntity = new ResponseEntity(itemList, HttpStatus.OK);
+                responseEntity = new ResponseEntity<>(itemList, HttpStatus.OK);
             }
         }
         finally
@@ -105,9 +105,9 @@ public final class Controller
 
     @RequestMapping(value = "/item", method = RequestMethod.POST,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity addItem(@RequestBody ItemList itemList)
+    public ResponseEntity<ItemListResponse> addItem(@RequestBody ItemList itemList)
     {
-        ResponseEntity responseEntity = null;
+        ResponseEntity<ItemListResponse> responseEntity = null;
         ItemListResponse retItemListResponse = null;
         ItemResponse itemResponse = null;
         ItemData itemData = null;
@@ -116,11 +116,11 @@ public final class Controller
         {
             if (itemList == null)
             {
-                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             else if (itemList.isEmpty())
             {
-                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             else
             {
@@ -152,7 +152,7 @@ public final class Controller
                     }
                     retItemListResponse.add(itemResponse);
                 }
-                responseEntity = new ResponseEntity(retItemListResponse, HttpStatus.OK);
+                responseEntity = new ResponseEntity<>(retItemListResponse, HttpStatus.OK);
             }
         }
         finally
@@ -166,9 +166,9 @@ public final class Controller
 
     @RequestMapping(value = "/item", method = RequestMethod.PUT,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity updateItem(@RequestBody ItemList itemList)
+    public ResponseEntity<ItemListResponse> updateItem(@RequestBody ItemList itemList)
     {
-        ResponseEntity responseEntity = null;
+        ResponseEntity<ItemListResponse> responseEntity = null;
         ItemListResponse retItemListResponse = null;
         ItemResponse itemResponse = null;
         ItemData itemData = null;
@@ -177,11 +177,11 @@ public final class Controller
         {
             if (itemList == null)
             {
-                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             else if (itemList.isEmpty())
             {
-                responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+                responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             else
             {
@@ -213,7 +213,7 @@ public final class Controller
                     }
                     retItemListResponse.add(itemResponse);
                 }
-                responseEntity = new ResponseEntity(retItemListResponse, HttpStatus.OK);
+                responseEntity = new ResponseEntity<>(retItemListResponse, HttpStatus.OK);
             }
         }
         finally
