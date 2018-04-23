@@ -1,11 +1,17 @@
 package com.github.reichesf.itemservice;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(value = "items", description = "Simple Item Service")
+@RequestMapping("/v1")
 public final class Controller
 {
     //@Autowired
@@ -16,18 +22,21 @@ public final class Controller
         this.itemService = itemService;
     }
 
-    @RequestMapping("/")
-    public String index()
-    {
-        return "Greetings from Item Controller!";
-    }
-
     // Illustrates the following:
     // - Exact specification of the method (GET) on the Request Mapping.
     // - Multiple "produces" on the RequestMapping to handle both JSON and XML.
     // - Use of the ResponseEntity when producing a response.
 
-    @RequestMapping(value = "/item/{upc}", method = RequestMethod.GET,
+    @ApiOperation(value = "Get Item", notes = "Retrieves the specified item.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 409, message = "Conflict"),
+        @ApiResponse(code = 503, message = "Service Unavailable"),
+    })
+    @RequestMapping(value = "items/{upc}", method = RequestMethod.GET,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity<ItemList> getItem(@PathVariable String upc)
     {
@@ -66,7 +75,16 @@ public final class Controller
         return responseEntity;
     }
 
-    @RequestMapping(value = "/item", method = RequestMethod.GET,
+    @ApiOperation(value = "Get Items", notes = "Retrieves the all items.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 409, message = "Conflict"),
+        @ApiResponse(code = 503, message = "Service Unavailable"),
+    })
+    @RequestMapping(value = "items", method = RequestMethod.GET,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity<ItemList> getItemList()
     {
@@ -103,7 +121,18 @@ public final class Controller
         return responseEntity;
     }
 
-    @RequestMapping(value = "/item", method = RequestMethod.POST,
+    @ApiOperation(value = "Adds Items", notes = "Adds the specified items.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 409, message = "Conflict"),
+        @ApiResponse(code = 503, message = "Service Unavailable"),
+    })
+    @RequestMapping(value = "items", method = RequestMethod.POST,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity<ItemListResponse> addItem(@RequestBody ItemList itemList)
     {
@@ -139,8 +168,8 @@ public final class Controller
                         itemResponse.setUpc(itemData.getUpc());
                         itemResponse.setDescription(itemData.getDescription());
                         itemResponse.setBalance(itemData.getBalance());
-                        itemResponse.setStatusCode(HttpStatus.OK.value());
-                        itemResponse.setStatus(HttpStatus.OK.getReasonPhrase());
+                        itemResponse.setStatusCode(HttpStatus.CREATED.value());
+                        itemResponse.setStatus(HttpStatus.CREATED.getReasonPhrase());
                     }
                     else
                     {
@@ -152,7 +181,7 @@ public final class Controller
                     }
                     retItemListResponse.add(itemResponse);
                 }
-                responseEntity = new ResponseEntity<>(retItemListResponse, HttpStatus.OK);
+                responseEntity = new ResponseEntity<>(retItemListResponse, HttpStatus.CREATED);
             }
         }
         finally
@@ -164,7 +193,16 @@ public final class Controller
         return responseEntity;
     }
 
-    @RequestMapping(value = "/item", method = RequestMethod.PUT,
+    @ApiOperation(value = "Updates Items", notes = "Updates the specified items.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 409, message = "Conflict"),
+        @ApiResponse(code = 503, message = "Service Unavailable"),
+    })
+    @RequestMapping(value = "items", method = RequestMethod.PUT,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
     public ResponseEntity<ItemListResponse> updateItem(@RequestBody ItemList itemList)
     {

@@ -13,9 +13,6 @@ import javax.xml.bind.annotation.XmlType;
 //
 // For JAXB (XML) the default (no-arg) constructor is
 // required.
-//
-// @XmlType with propOrder of 1 element is trivial but is
-// included to show it's use.
 
 @XmlType(propOrder = {"upc", "description", "balance"})
 

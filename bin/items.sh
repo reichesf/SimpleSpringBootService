@@ -1,6 +1,6 @@
 #!/bin/sh
 #---------------------------------------------------------------------
-# item.sh
+# items.sh
 #
 # Shell script used to interact with the service.
 #---------------------------------------------------------------------
@@ -8,9 +8,9 @@
 usage()
 {
 	echo ""
-	echo "Usage:  item.sh [-v] [-t mediaType] [-h host] [-p port]"
-	echo "                [-l | -g | -A | -U] [-f file]"
-	echo "                [-u upc] [-d description] [-b balance]"
+	echo "Usage:  items.sh [-v] [-t mediaType] [-h host] [-p port]"
+	echo "                 [-l | -g | -A | -U] [-f file]"
+	echo "                 [-u upc] [-d description] [-b balance]"
 	echo ""
 	echo "     -l = List all items."
 	echo "     -g = Get item specified by the UPC."
@@ -64,7 +64,7 @@ REQUEST_FILE="/tmp/request-$$"
 
 rm -rf ${REQUEST_FILE}
 
-RESOURCE="item"
+RESOURCE="v1/items"
 
 if [ "${GETITEM}" = "TRUE" ]
 then
@@ -123,7 +123,7 @@ then
 elif [ "${LISTITEMS}" = "TRUE" ]
 then
 	METHOD="GET"
-	RESOURCE="${RESOURCE}/"
+#	RESOURCE="${RESOURCE}/"
 else
 	usage
 	exit 1

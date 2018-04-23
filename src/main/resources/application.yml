@@ -1,0 +1,14 @@
+server:
+  port: 8080
+#  context-path: /v1
+spring:
+  application:
+    name: items
+
+# The following is needed to view the API details on http://localhost:8080/v1/swagger-ui.html#/
+
+  output:
+    ansi:
+      enabled: detect
+  profiles:
+    active: local
